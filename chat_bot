@@ -1,0 +1,154 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+import google.generativeai as genai
+
+
+genai.configure(api_key="Your Api Key Gemini Flash, Note:Free trial only 1000 token per day")
+
+model = genai.GenerativeModel("gemini-flash-latest")
+
+auto_reply = {
+    "harga": "Harga produk mulai dari 50 ribu.",
+    "lokasi": "Kami berada di Jakarta, Indonesia.",
+    "jam buka": "Kami buka jam 09:00 sampai 21:00.",
+    "buka": "Kami buka jam 09:00 sampai 21:00.",
+    "order": "Untuk memesan, silakan hubungi customer service kami.",
+    "cod": "Kami menerima pembayaran COD di area Jakarta.",
+    "terima kasih": "Sama-sama! Jika ada pertanyaan lain, silakan tanya.",
+    "makasih": "Sama-sama! Jika ada pertanyaan lain, silakan tanya.",
+    "halo": "Halo! Ada yang bisa saya bantu hari ini?",
+}
+
+def ai_response(text):
+
+    try:
+        response = model.generate_content(
+            f"""
+            Kamu adalah bot WhatsApp.
+            Jawab singkat maksimal 1 kalimat.
+            Gunakan bahasa santai.
+
+            Pertanyaan: {text}
+            """
+        )
+
+        return response.text.strip()
+
+    except:
+        return "Maaf, saya sedang mengalami gangguan."
+
+driver = webdriver.Edge()
+
+driver.get("https://web.whatsapp.com")
+
+print("Silakan scan QR Code...")
+
+
+WebDriverWait(driver, 120).until(
+    EC.presence_of_element_located((By.ID, "pane-side"))
+)
+
+print("WhatsApp berhasil login.")
+print("Silakan buka salah satu chat target.")
+
+input("Tekan ENTER setelah chat dibuka...")
+
+
+WebDriverWait(driver, 60).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, "div.message-in"))
+)
+
+print("Bot sudah aktif.")
+
+def read_last_message():
+
+    messages = driver.find_elements(
+        By.CSS_SELECTOR,
+        "div.message-in span.copyable-text"
+    )
+
+    if messages:
+        return messages[-1].text.strip()
+
+    return None
+
+last_message = ""
+
+
+while True:
+    
+    try:
+
+        unread_chats = driver.find_elements(
+            By.CSS_SELECTOR,
+            "span[aria-label*='unread']"
+        )
+
+        if unread_chats:
+
+            print("Ada pesan baru")
+
+            unread_chats[0].click()
+
+            time.sleep(2)
+
+            message = read_last_message()
+            
+            print("Bot sedang mengecek pesan...")
+
+        messages = driver.find_elements(
+            By.CSS_SELECTOR,
+            "div.message-in span.copyable-text"
+        )
+
+        print("Jumlah pesan terdeteksi:", len(messages))
+
+        if messages:
+
+            current_last = messages[-1].text.strip()
+
+            print("Pesan terakhir terbaca:", current_last)
+
+            if current_last != last_message:
+
+                print("Pesan baru:", current_last)
+
+                lower_msg = current_last.lower()
+
+                reply = None
+
+                for keyword in auto_reply:
+
+                    if keyword in lower_msg:
+                        reply = auto_reply[keyword]
+                        break
+
+                if reply is None:
+
+                    print("Menggunakan AI...")
+                    reply = ai_response(current_last)
+
+                time.sleep(1)
+
+                input_box = WebDriverWait(driver, 20).until(
+                    EC.presence_of_element_located(
+                        (By.CSS_SELECTOR, "footer div[contenteditable='true']")
+                    )
+                )
+
+                input_box.send_keys(reply)
+                input_box.send_keys(Keys.ENTER)
+
+                print("Bot membalas:", reply)
+
+                last_message = current_last
+
+    except Exception as e:
+
+        print("Terjadi error:", e)
+
+    time.sleep(5)
