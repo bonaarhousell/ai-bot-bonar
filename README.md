@@ -34,7 +34,7 @@ whatsapp-ai-chatbot/
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/whatsapp-ai-chatbot.git
+git clone https://github.com/bonaarhousell/whatsapp-ai-chatbot.git
 ```
 
 Move into the project folder:
@@ -66,7 +66,7 @@ pip install -r requirements.txt
 Create a `config.py` file:
 
 ```python
-API_KEY = "YOUR_GEMINI_API_KEY"
+GROQ_API_KEY = "YOUR_GROQ_API_KEY"
 ```
 
 ## Run The Project
