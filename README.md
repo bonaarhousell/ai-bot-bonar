@@ -6,7 +6,7 @@ A simple WhatsApp automation bot built with Python, Selenium, and GROQ AI.
 
 - Automatic WhatsApp replies
 - Keyword-based responses
-- AI-generated responses using llma API
+- AI-generated responses using Groq API
 - Real-time message monitoring
 - Browser automation with Selenium
 
