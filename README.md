@@ -1,12 +1,12 @@
 # WhatsApp AI Chatbot
 
-A simple WhatsApp automation bot built with Python, Selenium, and Gemini AI.
+A simple WhatsApp automation bot built with Python, Selenium, and GROQ AI.
 
 ## Features
 
 - Automatic WhatsApp replies
 - Keyword-based responses
-- AI-generated responses using Gemini API
+- AI-generated responses using llma API
 - Real-time message monitoring
 - Browser automation with Selenium
 
@@ -14,7 +14,7 @@ A simple WhatsApp automation bot built with Python, Selenium, and Gemini AI.
 
 - Python
 - Selenium
-- Gemini API
+- GROQ API
 - Microsoft Edge WebDriver
 
 ## Project Structure
@@ -34,13 +34,13 @@ whatsapp-ai-chatbot/
 Clone the repository:
 
 ```bash
-git clone https://github.com/bonaarhousell/whatsapp-ai-chatbot.git
+git clone https://github.com/bonaarhousell/python-automation-reply.git
 ```
 
 Move into the project folder:
 
 ```bash
-cd whatsapp-ai-chatbot
+cd python-automation-reply
 ```
 
 Create virtual environment:
